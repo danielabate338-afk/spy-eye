@@ -1,0 +1,23 @@
+[Framework_Metadata]
+FrameworkName = SpyEye C2 Framework
+Version = 3.1.0
+TargetPlatform = Windows-x86_64
+Author = Operator
+
+[Security_Configuration]
+EncryptionEnabled = true
+CipherAlgorithm = AES-256
+TokenValidation = strict
+ObfuscationLevel = high
+HeartbeatIntervalSeconds = 30
+
+[Network_Parameters]
+DefaultListenerPort = 5000
+SocketProtocol = WebSocket
+ReconnectionDelay = 10
+MaxRetryAttempts = 5
+
+[Execution_Policies]
+AutoStartPersistence = true
+MemoryEvasion = true
+LogRetention = false
